@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="tamnoPlava">#01161E</color>
+    <color name="svijetloPlava">#386FA4</color>
+    <color name="svijetloSiva">#50555B</color>
+    <color name="tamnoSiva">#36393E</color>
+    <color name="bijeloSiva">#D7DAE5</color>
+</resources>
