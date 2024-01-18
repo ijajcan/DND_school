@@ -23,7 +23,9 @@ public class Main extends AppCompatActivity {
     TextView indikacija;
     public static boolean isAppOn = false;
     public static final String SHARED_PREFERENCES = "SharedPreferences";
-    public static final String SVITCH = "svitch";
+    public static final String SWITCH = "switch";
+    boolean premission = false;
+    Intent serviceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +35,14 @@ public class Main extends AppCompatActivity {
         indikacija = findViewById(R.id.indikacija);
         AskForPremission(Main.this);
         Load();
-        StartService();
+
+        if(premission) {
+            StartService();
+        }
     }
 
     public void StartService() {
-        Intent serviceIntent = new Intent(this, com.example.dndschool.NetworkMonitorService.class);
+        serviceIntent = new Intent(this, com.example.dndschool.NetworkMonitorService.class);
         serviceIntent.putExtra("isAppOn", isAppOn);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent);
@@ -45,6 +50,7 @@ public class Main extends AppCompatActivity {
             startService(serviceIntent);
         }
     }
+
     public void SetOnOff(View view) {
         isAppOn = !isAppOn;
         if (isAppOn) {
@@ -54,6 +60,7 @@ public class Main extends AppCompatActivity {
             indikacija.setText("Ugašeno");
             AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+            stopService(serviceIntent);
         }
         Save();
         // Update the service with the new isAppOn value
@@ -65,7 +72,9 @@ public class Main extends AppCompatActivity {
     public void AskForPremission(Context context) {
         if (ContextCompat.checkSelfPermission(Main.this, Manifest.permission.MODIFY_AUDIO_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(Main.this, new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, 101);
+            premission = false;
         } else {
+            premission = true;
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
                     && !notificationManager.isNotificationPolicyAccessGranted()) {
@@ -75,12 +84,16 @@ public class Main extends AppCompatActivity {
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            premission = false;
         } else {
+            premission = true;
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 1);
+            premission = false;
         } else {
+            premission = true;
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         }
     }
@@ -88,14 +101,14 @@ public class Main extends AppCompatActivity {
     public void Save() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(SVITCH, isAppOn);
+        editor.putBoolean(SWITCH, isAppOn);
         editor.apply();
-        Log.v("jajcan", "saved");
+//        Log.v("jajcan", "saved");
     }
 
     public void Load() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
-        isAppOn = sharedPreferences.getBoolean(SVITCH, false);
+        isAppOn = sharedPreferences.getBoolean(SWITCH, false);
         onOff.setChecked(isAppOn);
         if (isAppOn) {
             indikacija.setText("Upaljeno");
@@ -106,4 +119,3 @@ public class Main extends AppCompatActivity {
         }
     }
 }
-
