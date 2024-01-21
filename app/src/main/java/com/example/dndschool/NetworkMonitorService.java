@@ -22,8 +22,8 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 public class NetworkMonitorService extends Service {
-//    String networkName = "\"eduroam\"";
     String networkName = "\"AndroidWifi\"";
+//    String networkName = "\"eduroam\"";
     public static final int NOTIFICATION_ID = 1;
     public static final String CHANNEL_ID = "NetworkMonitorServiceChannel";
     public static boolean isAppOn = false;
@@ -36,10 +36,11 @@ public class NetworkMonitorService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        Log.e("jajcan","service started");
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, Main.class);
         isAppOn = intent.getBooleanExtra("isAppOn", false);
-//        Log.d("jajcan", String.valueOf(isAppOn));
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Network Monitor Service")
@@ -89,11 +90,9 @@ public class NetworkMonitorService extends Service {
                 if (ssid.equals(networkName)) {
                     if(isAppOn) {
                         Mute(audioManager);
-//                        Log.v("jajcan", ssid + "Aveable mute    " + isAppOn);
                     }
                 } else {
                     UnMute(audioManager);
-//                    Log.v("jajcan", ssid + "Aveable unmute  " + isAppOn);
                 }
             }
 
@@ -103,7 +102,6 @@ public class NetworkMonitorService extends Service {
                 Network activeNetwork = connectivityManager.getActiveNetwork();
                 if (activeNetwork == null) {
                     UnMute(audioManager);
-//                    Log.v("jajcan", "onLost unmute");
                 }
             }
         };
@@ -120,7 +118,7 @@ public class NetworkMonitorService extends Service {
 
     @Override
     public void onDestroy() {
-//        Log.e("jajcan","service stoped");
+        Log.e("jajcan","service stoped");
         super.onDestroy();
     }
 }

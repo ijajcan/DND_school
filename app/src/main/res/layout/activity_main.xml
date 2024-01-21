@@ -7,31 +7,43 @@
     android:background="@color/tamnoSiva"
     tools:context=".Main">
 
+    <TextView
+        android:layout_width="330dp"
+        android:layout_height="230dp"
+        android:layout_marginTop="56dp"
+        android:text="Aplikacija će automatski utišati mobitel kada je spojen na eduroam bežičnu mrežu."
+        android:textAlignment="center"
+        android:textAppearance="@style/naslov"
+        android:textSize="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/indikacija"
+        android:layout_width="355dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center_horizontal|center_vertical"
+        android:text="Nemoj automatski utišavati mobitel"
+        android:textAppearance="@style/naslov"
+        app:layout_constraintBottom_toTopOf="@+id/rectangle_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/rectangle_1"
-        android:layout_width="329dp"
-        android:layout_height="293dp"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/rounded"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/indikacija"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="Ugašeno"
-            android:textAppearance="@style/naslov"
-            android:textSize="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.748">
 
         <Switch
             android:id="@+id/onOff"
@@ -39,13 +51,13 @@
             android:layout_height="139dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="32dp"
             android:onClick="SetOnOff"
             android:thumb="@drawable/ic_thumb"
             android:track="@drawable/bg_track"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -53,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="napravio Ivan Jajčan"
+        android:text="napravio Ivan Jajčan, 2024.\n  Srednja škola Dugo Selo"
         android:textAppearance="@style/text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
