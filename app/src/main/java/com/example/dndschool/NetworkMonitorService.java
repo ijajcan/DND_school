@@ -34,13 +34,13 @@ public class NetworkMonitorService extends Service {
         super.onCreate();
         connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Log.e("jajcan","service started");
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, Main.class);
         isAppOn = intent.getBooleanExtra("isAppOn", false);
+        Log.e("jajcan","service started     " + isAppOn);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Network Monitor Service")

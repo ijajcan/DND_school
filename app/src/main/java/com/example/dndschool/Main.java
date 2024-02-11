@@ -41,17 +41,8 @@ public class Main extends AppCompatActivity {
             Load();
 //            StartService();
         }
+        Log.v("jajcan", "main LOaded");
     }
-
-//    public void StartService() {
-//        Intent serviceIntent = new Intent(this, com.example.dndschool.NetworkMonitorService.class);
-//        serviceIntent.putExtra("isAppOn", isAppOn);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(serviceIntent);
-//        } else {
-//            startService(serviceIntent);
-//        }
-//    }
 
     public void SetOnOff(View view) {
         isAppOn = !isAppOn;
@@ -70,7 +61,6 @@ public class Main extends AppCompatActivity {
         Save();
     }
 
-
     public void AskForPremission(Context context) {
         if (ContextCompat.checkSelfPermission(Main.this, Manifest.permission.MODIFY_AUDIO_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(Main.this, new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, 101);
@@ -79,7 +69,7 @@ public class Main extends AppCompatActivity {
             NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !notificationManager.isNotificationPolicyAccessGranted()) {
                 new AlertDialog.Builder(Main.this)
-                        .setTitle("Potrebna Dozvula")
+                        .setTitle("Potrebna Dozvola")
                         .setMessage("Ova aplikacija treba pristup obavijestima. Želite li nastaviti?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
@@ -102,7 +92,7 @@ public class Main extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(Main.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Show the dialog
             new AlertDialog.Builder(Main.this)
-                    .setTitle("Potrebna Dozvula")
+                    .setTitle("Potrebna Dozvola")
                     .setMessage("Ova aplikacija treba pristup vašoj lokaciji. Želite li nastaviti?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
@@ -126,8 +116,8 @@ public class Main extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(Main.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Show the dialog
             new AlertDialog.Builder(Main.this)
-                    .setTitle("Potrebna Dozvula")
-                    .setMessage("Ova aplikacija treba pristup vašoj trenutačnoj lokaciji. Želite li nastaviti?")
+                    .setTitle("Potrebna Dozvola")
+                    .setMessage("Ova aplikacija treba pristup vašoj trenutnoj lokaciji. Želite li nastaviti?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
