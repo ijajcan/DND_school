@@ -65,8 +65,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="napravio Ivan Jajčan, 2024.\n  Srednja škola Dugo Selo"
+        android:text="napravio Ivan Jajčan, 2024.\nSrednja škola Dugo Selo"
         android:textAppearance="@style/text"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -15,7 +15,6 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -34,14 +33,13 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         onOff = findViewById(R.id.onOff);
         indikacija = findViewById(R.id.indikacija);
-        AskForPremission(Main.this);
+        AskForPermission();
 
 
         if(permission) {
             Load();
 //            StartService();
         }
-        Log.v("jajcan", "main LOaded");
     }
 
     public void SetOnOff(View view) {
@@ -49,7 +47,7 @@ public class Main extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, com.example.dndschool.NetworkMonitorService.class);
         if (isAppOn) {
             indikacija.setText("Automatski utišaj mobitel kada je sppojen na Wifi mrežu eduroam");
-            AskForPremission(Main.this);
+            AskForPermission();
             serviceIntent.putExtra("isAppOn", isAppOn);
             startService(serviceIntent);
         } else {
@@ -61,7 +59,7 @@ public class Main extends AppCompatActivity {
         Save();
     }
 
-    public void AskForPremission(Context context) {
+    public void AskForPermission() {
         if (ContextCompat.checkSelfPermission(Main.this, Manifest.permission.MODIFY_AUDIO_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(Main.this, new String[]{Manifest.permission.MODIFY_AUDIO_SETTINGS}, 101);
         } else {
@@ -90,7 +88,6 @@ public class Main extends AppCompatActivity {
 
 
         if (ActivityCompat.checkSelfPermission(Main.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Show the dialog
             new AlertDialog.Builder(Main.this)
                     .setTitle("Potrebna Dozvola")
                     .setMessage("Ova aplikacija treba pristup vašoj lokaciji. Želite li nastaviti?")
@@ -110,18 +107,16 @@ public class Main extends AppCompatActivity {
             permission = false;
         } else {
             permission = true;
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         }
 
         if (ActivityCompat.checkSelfPermission(Main.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Show the dialog
             new AlertDialog.Builder(Main.this)
                     .setTitle("Potrebna Dozvola")
                     .setMessage("Ova aplikacija treba pristup vašoj trenutnoj lokaciji. Želite li nastaviti?")
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(Main.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 2);
+                            ActivityCompat.requestPermissions(Main.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 3);
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -134,7 +129,6 @@ public class Main extends AppCompatActivity {
             permission = false;
         } else {
             permission = true;
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         }
 
 
