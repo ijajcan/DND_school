@@ -5,5 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.DNDSchool" parent="Base.Theme.DNDSchool" />
+    <style name="Theme.DNDSchool" parent="Base.Theme.DNDSchool">
+        <item name="android:colorPrimaryDark">@color/tamnoSiva</item>
+    </style>
 </resources>

@@ -17,8 +17,13 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main extends AppCompatActivity {
     Switch onOff;
@@ -27,13 +32,26 @@ public class Main extends AppCompatActivity {
     public static final String SHARED_PREFERENCES = "SharedPreferences";
     public static final String SWITCH = "switch";
     boolean permission = false;
-
+    ListView listView;
+    ArrayList<String> wifiList = new ArrayList<>();
+    WifiListAdapter wifiListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         onOff = findViewById(R.id.onOff);
         indikacija = findViewById(R.id.indikacija);
+        listView = findViewById(R.id.listView);
+
+        wifiList.add("eduroam");
+        wifiList.add("eduroam2");
+        wifiList.add("eduroam3");
+        wifiList.add("eduroam4");
+        wifiList.add("eduroam5");
+        wifiListAdapter = new WifiListAdapter(getApplicationContext(), wifiList);
+        listView.setAdapter(wifiListAdapter);
+
+
         AskForPermission(Main.this);
 
 
@@ -163,5 +181,12 @@ public class Main extends AppCompatActivity {
             AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         }
+    }
+
+    public void add(View view) {
+        EditText editText = findViewById(R.id.enterWiFi);
+        wifiList.add(editText.getText().toString());
+        editText.setText("");
+        wifiListAdapter.notifyDataSetChanged();
     }
 }
