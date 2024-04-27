@@ -44,13 +44,12 @@ public class Main extends AppCompatActivity {
         onOff = findViewById(R.id.onOff);
         indikacija = findViewById(R.id.indikacija);
         listView = findViewById(R.id.listView);
+        wifiList.add("eduroam");
 
-        wifiList = new ArrayList<>();
         wifiListAdapter = new WifiListAdapter(getApplicationContext(), wifiList);
         listView.setAdapter(wifiListAdapter);
 
 
-        wifiList.add("eduroam");
         AskForPermission(Main.this);
 
 
@@ -178,7 +177,11 @@ public class Main extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         isAppOn = sharedPreferences.getBoolean(SWITCH, false);
         Set<String> wifiSet = sharedPreferences.getStringSet("wifiList", new HashSet<>());
-        wifiList.addAll(wifiSet);
+
+        if (wifiSet != null) {
+            wifiList.clear();
+            wifiList.addAll(wifiSet);
+        }
         wifiListAdapter.notifyDataSetChanged();
 
 
