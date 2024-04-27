@@ -23,7 +23,6 @@ import androidx.core.app.NotificationCompat;
 
 public class NetworkMonitorService extends Service {
     String networkName = "\"Ivan\"";
-//    String networkName = "\"Eduroam\"";
     public static final int NOTIFICATION_ID = 1;
     public static final String CHANNEL_ID = "NetworkMonitorServiceChannel";
     public static boolean isAppOn = false;
@@ -40,7 +39,6 @@ public class NetworkMonitorService extends Service {
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, Main.class);
         isAppOn = intent.getBooleanExtra("isAppOn", false);
-
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Network Monitor Service")
@@ -121,11 +119,4 @@ public class NetworkMonitorService extends Service {
         Log.e("jajcan","service stoped");
         super.onDestroy();
     }
-
-//    public static boolean isPhoneMuted(Context context) {
-//        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-//        int ringerMode = audioManager.getRingerMode();
-//
-//        return ringerMode == AudioManager.RINGER_MODE_SILENT || ringerMode == AudioManager.RINGER_MODE_NORMAL;
-//    }
 }
