@@ -21,12 +21,15 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import java.util.ArrayList;
+
 public class NetworkMonitorService extends Service {
-    String networkName = "\"Ivan\"";
     public static final int NOTIFICATION_ID = 1;
     public static final String CHANNEL_ID = "NetworkMonitorServiceChannel";
     public static boolean isAppOn = false;
+    public static ArrayList<String> wifiList = new ArrayList<>();
     public ConnectivityManager connectivityManager;
+    public static final String ACTION_UPDATE_WIFI_LIST = "com.example.dndschool.ACTION_UPDATE_WIFI_LIST";
 
     @Override
     public void onCreate() {
@@ -36,9 +39,23 @@ public class NetworkMonitorService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null) {
+            String action = intent.getAction();
+            if (ACTION_UPDATE_WIFI_LIST.equals(action)) {
+                ArrayList<String> updatedWifiList = intent.getStringArrayListExtra("wifiList");
+                if (updatedWifiList != null) {
+                    wifiList.clear();
+                    wifiList.addAll(updatedWifiList);
+                }
+            }
+        }
+
         createNotificationChannel();
         Intent notificationIntent = new Intent(this, Main.class);
         isAppOn = intent.getBooleanExtra("isAppOn", false);
+        if (intent.getStringArrayListExtra("wifiList") != null) {
+            wifiList = intent.getStringArrayListExtra("wifiList");
+        }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Network Monitor Service")
@@ -54,6 +71,7 @@ public class NetworkMonitorService extends Service {
         registerNetworkCallback();
         return START_STICKY;
     }
+
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -85,7 +103,14 @@ public class NetworkMonitorService extends Service {
                 WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
                 String ssid = wifiInfo.getSSID();
-                if (ssid.equals(networkName)) {
+                if (ssid.length() > 2 && ssid.startsWith("\"") && ssid.endsWith("\"")) {
+                    ssid = ssid.substring(1, ssid.length() - 1).trim(); // Remove first and last character
+                }
+
+                Log.e("jajcan", ssid);
+                Log.e("jajcan", wifiList.toString());
+                Log.e("jajcan", String.valueOf(wifiList.contains(ssid)));
+                if (wifiList.contains(ssid)) {
                     if(isAppOn) {
                         Mute(audioManager);
                     }

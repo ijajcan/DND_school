@@ -24,6 +24,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Main extends AppCompatActivity {
     Switch onOff;
@@ -43,15 +45,12 @@ public class Main extends AppCompatActivity {
         indikacija = findViewById(R.id.indikacija);
         listView = findViewById(R.id.listView);
 
-        wifiList.add("eduroam");
-        wifiList.add("eduroam2");
-        wifiList.add("eduroam3");
-        wifiList.add("eduroam4");
-        wifiList.add("eduroam5");
+        wifiList = new ArrayList<>();
         wifiListAdapter = new WifiListAdapter(getApplicationContext(), wifiList);
         listView.setAdapter(wifiListAdapter);
 
 
+        wifiList.add("eduroam");
         AskForPermission(Main.this);
 
 
@@ -67,6 +66,7 @@ public class Main extends AppCompatActivity {
             indikacija.setText("Automatski utišaj mobitel kada je sppojen na Wifi mrežu eduroam");
             AskForPermission(Main.this);
             serviceIntent.putExtra("isAppOn", isAppOn);
+            serviceIntent.putStringArrayListExtra("wifiList", wifiList);
             startService(serviceIntent);
         } else {
             indikacija.setText("Nemoj automatski utišavati mobitel");
@@ -167,12 +167,21 @@ public class Main extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(SWITCH, isAppOn);
+        Set<String> set = new HashSet<>(wifiList);
+        editor.putStringSet("wifiList", set);
         editor.apply();
+
+        Log.e("jajcan", "Saved: " + wifiList.toString());
     }
 
     public void Load() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         isAppOn = sharedPreferences.getBoolean(SWITCH, false);
+        Set<String> wifiSet = sharedPreferences.getStringSet("wifiList", new HashSet<>());
+        wifiList.addAll(wifiSet);
+        wifiListAdapter.notifyDataSetChanged();
+
+
         onOff.setChecked(isAppOn);
         if (isAppOn) {
             indikacija.setText("Automatski utišaj mobitel kada je sppojen na Wifi mrežu eduroam");
@@ -181,12 +190,33 @@ public class Main extends AppCompatActivity {
             AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
         }
+
+        Log.e("jajcan","Loaded: " + wifiList.toString());
+
     }
 
     public void add(View view) {
         EditText editText = findViewById(R.id.enterWiFi);
-        wifiList.add(editText.getText().toString());
-        editText.setText("");
-        wifiListAdapter.notifyDataSetChanged();
+        String newWifi = editText.getText().toString();
+
+        if(newWifi.isEmpty()) {
+            editText.setError("Unesite WiFi mrežu");
+            editText.requestFocus();
+        } else {
+            editText.setText("");
+            wifiList.add(newWifi);
+            wifiListAdapter.notifyDataSetChanged();
+            Log.e("jajcan", "Added: " + wifiList.toString());
+
+            // Update the wifiList in the NetworkMonitorService
+            Intent updateIntent = new Intent(this, NetworkMonitorService.class);
+            stopService(updateIntent);
+            updateIntent.putStringArrayListExtra("wifiList", wifiList);
+            updateIntent.putExtra("isAppOn", isAppOn);
+            startService(updateIntent);
+
+            Save();
+        }
     }
+
 }

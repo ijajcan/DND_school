@@ -1,6 +1,7 @@
 package com.example.dndschool;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,8 +47,16 @@ public class WifiListAdapter extends android.widget.BaseAdapter {
             public void onClick(View v) {
                 wifiList.remove(position);
                 notifyDataSetChanged();
+                updateService();
             }
         });
         return convertView;
+    }
+    private void updateService() {
+        // Update the wifiList in the NetworkMonitorService
+        Intent updateIntent = new Intent(context, NetworkMonitorService.class);
+        updateIntent.setAction(NetworkMonitorService.ACTION_UPDATE_WIFI_LIST);
+        updateIntent.putStringArrayListExtra("wifiList", wifiList);
+        context.startService(updateIntent);
     }
 }
