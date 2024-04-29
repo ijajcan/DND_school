@@ -59,21 +59,28 @@ public class Main extends AppCompatActivity {
     }
 
     public void SetOnOff(View view) {
-        isAppOn = !isAppOn;
-        Intent serviceIntent = new Intent(this, com.example.dndschool.NetworkMonitorService.class);
-        if (isAppOn) {
-            indikacija.setText("Automatski utišaj mobitel kada je sppojen na Wifi mrežu eduroam");
-            AskForPermission(Main.this);
-            serviceIntent.putExtra("isAppOn", isAppOn);
-            serviceIntent.putStringArrayListExtra("wifiList", wifiList);
-            startService(serviceIntent);
+
+         Log.v("jajca", String.valueOf(permission));
+        if(permission){
+            isAppOn = !isAppOn;
+            Intent serviceIntent = new Intent(this, com.example.dndschool.NetworkMonitorService.class);
+
+            if (isAppOn) {
+                indikacija.setText("Automatski utišaj mobitel kada je sppojen na Wifi mrežu eduroam");
+                serviceIntent.putExtra("isAppOn", isAppOn);
+                serviceIntent.putStringArrayListExtra("wifiList", wifiList);
+                startService(serviceIntent);
+            } else {
+                indikacija.setText("Nemoj automatski utišavati mobitel");
+                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                stopService(serviceIntent);
+            }
+            Save();
         } else {
-            indikacija.setText("Nemoj automatski utišavati mobitel");
-            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-            stopService(serviceIntent);
+            onOff.setChecked(false);
+            AskForPermission(Main.this);
         }
-        Save();
     }
 
     public void AskForPermission(Context context) {
@@ -125,7 +132,6 @@ public class Main extends AppCompatActivity {
             permission = false;
         } else {
             permission = true;
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         }
 
         if (ActivityCompat.checkSelfPermission(Main.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -149,19 +155,9 @@ public class Main extends AppCompatActivity {
             permission = false;
         } else {
             permission = true;
-            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         }
-
-
-
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, 3);
-//            permission = false;
-//        } else {
-//            permission = true;
-//            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//        }
     }
+
     public void Save() {
         SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
